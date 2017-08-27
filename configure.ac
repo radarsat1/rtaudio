@@ -131,10 +131,21 @@ AS_IF([test "x$with_jack" == "xyes"], [
 
 case $host in
   *-*-netbsd*)
+  if [test "$api" == "";] then
     AC_MSG_RESULT(using OSS)
-    api="$api -D__LINUX_OSS__"
+    api="$api -D__UNIX_OSS__"
     LIBS="$LIBS -lossaudio"
     AC_CHECK_LIB(pthread, pthread_create, , AC_MSG_ERROR(RtAudio requires the pthread library!))
+  fi
+  ;;
+
+  *-*-freebsd*)
+  if [test "$api" == "";] then
+    AC_MSG_RESULT(using OSS)
+    api="$api -D__UNIX_OSS__"
+    LIBS="$LIBS -lossaudio"
+    AC_CHECK_LIB(pthread, pthread_create, , AC_MSG_ERROR(RtAudio requires the pthread library!))
+  fi
   ;;
 
   *-*-freebsd*)
@@ -164,7 +175,7 @@ case $host in
   # Look for OSS flag
   AC_ARG_WITH(oss, [  --with-oss = choose OSS API support (linux only)])
   AS_IF([test "x$with_oss" == "xyes"], [
-    api="$api -D__LINUX_OSS__"
+    api="$api -D__UNIX_OSS__"
     AC_MSG_RESULT(using OSS)])
 
   # If no audio api flags specified, use ALSA

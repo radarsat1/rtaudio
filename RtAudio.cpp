@@ -76,7 +76,7 @@ const unsigned int RtApi::SAMPLE_RATES[] = {
     return s;
   }
 
-#elif defined(__LINUX_ALSA__) || defined(__LINUX_PULSE__) || defined(__UNIX_JACK__) || defined(__LINUX_OSS__) || defined(__MACOSX_CORE__)
+#elif defined(__LINUX_ALSA__) || defined(__LINUX_PULSE__) || defined(__UNIX_JACK__) || defined(__UNIX_OSS__) || defined(__MACOSX_CORE__)
   // pthread API
   #define MUTEX_INITIALIZE(A) pthread_mutex_init(A, NULL)
   #define MUTEX_DESTROY(A)    pthread_mutex_destroy(A)
@@ -113,8 +113,8 @@ void RtAudio :: getCompiledApi( std::vector<RtAudio::Api> &apis )
 #if defined(__LINUX_PULSE__)
   apis.push_back( LINUX_PULSE );
 #endif
-#if defined(__LINUX_OSS__)
-  apis.push_back( LINUX_OSS );
+#if defined(__UNIX_OSS__)
+  apis.push_back( UNIX_OSS );
 #endif
 #if defined(__WINDOWS_ASIO__)
   apis.push_back( WINDOWS_ASIO );
@@ -151,8 +151,8 @@ void RtAudio :: openRtApi( RtAudio::Api api )
   if ( api == LINUX_PULSE )
     rtapi_ = new RtApiPulse();
 #endif
-#if defined(__LINUX_OSS__)
-  if ( api == LINUX_OSS )
+#if defined(__UNIX_OSS__)
+  if ( api == UNIX_OSS )
     rtapi_ = new RtApiOss();
 #endif
 #if defined(__WINDOWS_ASIO__)
@@ -8673,7 +8673,7 @@ bool RtApiPulse::probeDeviceOpen( unsigned int device, StreamMode mode,
 //******************** End of __LINUX_PULSE__ *********************//
 #endif
 
-#if defined(__LINUX_OSS__)
+#if defined(__UNIX_OSS__)
 
 #include <unistd.h>
 #include <sys/ioctl.h>
@@ -9616,7 +9616,7 @@ static void *ossCallbackHandler( void *ptr )
   pthread_exit( NULL );
 }
 
-//******************** End of __LINUX_OSS__ *********************//
+//******************** End of __UNIX_OSS__ *********************//
 #endif
 
 
